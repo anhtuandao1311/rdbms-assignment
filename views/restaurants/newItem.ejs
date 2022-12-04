@@ -1,0 +1,41 @@
+<% layout('layouts/boilerplate')%>
+<div class="row">
+    <h1 class="text-center">New Item</h1>
+    <div class="col-md-6 offset-md-3">
+        <form method="POST" action="/restaurants/<%= id %>/menu" novalidate class="validated-form">
+            <div class="mb-3">
+                <label class="form-label" for="title">Item Name</label>
+                <input class="form-control" type="text" id="title" name="name" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            
+
+            <div class="mb-3">
+                <label class="form-label" for="price">Price</label>
+                <div class="input-group">
+                    <span class="input-group-text" id="price-label">VND</span>
+                    <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price"
+                        aria-describedby="price-label" name="price" required>
+                </div>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="category" class="form-label">Choose Category</label>
+                <select class="form-select" aria-label="Default select example" id="category" name="category">
+                    <option value="Food" selected>Food</option>
+                    <option value="Beverage">Beverage</option>
+                </select>
+            </div>
+            
+            <div class="mb-3">
+                <button class="btn btn-primary">Add Item</button>
+            </div>
+        </form>
+        <a href="/restaurants/<%= id %>/menu ">Back to Menu</a>
+    </div>
+</div>

@@ -1,0 +1,105 @@
+<% layout('layouts/boilerplate')%>
+<div class="row">
+    <h1 class="text-center">New Restaurant</h1>
+    <div class="col-md-6 offset-md-3">
+        <form method="POST" action="/restaurants" novalidate class="validated-form">
+            <div class="mb-3">
+                <label class="form-label" for="title">Restaurant Name</label>
+                <input class="form-control" type="text" id="title" name="name" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control" name="description" id="description" cols="30" rows="3"
+                    ></textarea>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            
+
+            <div class="mb-3">
+                <label class="form-label" for="price">Average Price</label>
+                <div class="input-group">
+                    <span class="input-group-text" id="price-label">VND</span>
+                    <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price"
+                        aria-describedby="price-label" name="avg_cost" required>
+                </div>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="street_no">Street No</label>
+                <input class="form-control" type="text" id="street_no" name="street_no" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="street_name">Street Name</label>
+                <input class="form-control" type="text" id="street_name" name="street_name" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="district" class="form-label">Choose District</label>
+                <select class="form-select" aria-label="Default select example" id="district" name="district">
+                    <option value="District 1" selected>District 1</option>
+                    <option value="District 2">District 2</option>
+                    <option value="District 3">District 3</option>
+                    <option value="District 4">District 4</option>
+                    <option value="District 5">District 5</option>
+                    <option value="District 6">District 6</option>
+                    <option value="District 7">District 7</option>
+                    <option value="District 8">District 8</option>
+                    <option value="District 9">District 9</option>
+                    <option value="District 10">District 10</option>
+                    <option value="District 11">District 11</option>
+                    <option value="District 12">District 12</option>
+                    <option value="Tan Binh">Tan Binh</option>
+                    <option value="Tan Phu">Tan Phu</option>
+                    <option value="Phu Nhuan">Phu Nhuan</option>
+                    <option value="Binh Thanh">Binh Thanh</option>
+                    <option value="Go Vap">Go Vap</option>
+                    <option value="Binh Tan">Binh Tan</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="city">City</label>
+                <input class="form-control" type="text" id="city" name="city" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="open_hours">Open Hours</label>
+                <input class="form-control" type="text" id="open_hours" name="open_hours" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="contact_details">Contact Details</label>
+                <input class="form-control" type="text" id="contact_details" name="contact_details" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <button class="btn btn-primary">Add Restaurant</button>
+            </div>
+        </form>
+        <a href="/restaurants">All Restaurants</a>
+    </div>
+</div>

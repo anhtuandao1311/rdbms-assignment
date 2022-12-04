@@ -1,0 +1,130 @@
+<% layout('layouts/boilerplate')%>
+    <link rel="stylesheet" href="/styles/stars.css">
+    <div class="row">
+        <div class="col-6">
+            
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%= restaurant.name %>
+                    </h5>
+                    <p class="card-text">
+                        <% if(restaurant.description){ %> 
+                        <%= restaurant.description%>
+                        <%} else{ %>
+                        No Description
+                        <% } %>  
+                    </p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-muted">
+                        <%= restaurant.street_no%>, <%= restaurant.street_name%>, <%= restaurant.district%>, <%= restaurant.city%>
+                    </li>
+                    <li class="list-group-item">Opening: <%= restaurant.open_hours%></li>
+                    <li class="list-group-item">Contact: <%= restaurant.contact_details%></li>
+                    <li class="list-group-item">Average: VND <%= restaurant.avg_cost%></li>
+                    <li class="list-group-item"><%=  restaurant.avg_rating %> <span class="fa fa-star" style="color:orange"></span></li>
+                    <li class="list-group-item"><a href="/restaurants/<%= restaurant.id %>/menu" class="btn btn-primary">View menu</a></li>
+                </ul>
+                
+                <% if( currentUser && currentUser.username === 'admin') {%>
+                    <div class="card-footer bg-white">
+                        <a href="/restaurants/<%= restaurant.id %>/edit" class="btn btn-success">Edit <%= restaurant.name %> </a>
+                    
+                        </div>
+
+                    <div class="card-footer bg-white">
+                            <form
+                                action="/restaurants/<%=restaurant.id%>?_method=DELETE"
+                                method="POST">
+                                <button class="btn btn-danger">Delete</button>
+                            </form>
+                        
+                    </div>
+                <% } %>
+            </div>
+
+        </div>
+
+        <div class="col-6">
+            <% if(currentUser){ %>
+                <h2>Leave a Review</h2>
+                <form action="/restaurants/<%=restaurant.id%>/reviews" method="POST" class="mb-3 validated-form"
+                    novalidate>
+                    <div class="mb-1">
+                        <fieldset class="starability-basic">
+                            <input type="radio" id="no-rate" class="input-no-rate" name="stars" value="1"
+                                checked aria-label="No rating." />
+                            <input type="radio" id="first-rate1" name="stars" value="1" />
+                            <label for="first-rate1" title="Terrible">1 star</label>
+                            <input type="radio" id="first-rate2" name="stars" value="2" />
+                            <label for="first-rate2" title="Not good">2 stars</label>
+                            <input type="radio" id="first-rate3" name="stars" value="3" />
+                            <label for="first-rate3" title="Average">3 stars</label>
+                            <input type="radio" id="first-rate4" name="stars" value="4" />
+                            <label for="first-rate4" title="Very good">4 stars</label>
+                            <input type="radio" id="first-rate5" name="stars" value="5" />
+                            <label for="first-rate5" title="Amazing">5 stars</label>
+                        </fieldset>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="body">Review</label>
+                        <textarea class="form-control" name="review_text" id="body" cols="30" rows="3"
+                            required></textarea>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                    <button class="btn btn-primary">Submit</button>
+                </form>
+                <% } %>
+
+            <% for(let review of reviews) { %>
+                <div class="card mb-3 ">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                <%= review.username%>
+                            </h6>
+                        </h5>
+                        <p class="starability-result" data-rating="<%=review.stars%>">
+                            Rated: <%= review.stars %> stars
+                        </p>
+                        <p class="card-text"><%= review.review_text %>
+                        </p>
+                        <ul class="list-group list-group-flush mb-1">
+                            <div class="row">
+                                <div class="col-6">
+                                    <li class="list-group-item text-muted">
+                                        <i class='bx bx-like' ></i></i><%= review.upvotes  %> 
+                                    </li>
+                                </div>
+                                <div class="col-6">
+                                    <li class="list-group-item text-muted">
+                                        <i class='bx bx-dislike' ></i><%= review.downvotes  %> 
+                                    </li>
+                                </div>
+                            </div>
+                            
+                        </ul>
+                        <p class="card-text"><%= review.upload_date %></p>
+                        <a href="/restaurants/<%= restaurant.id %>/<%= review.id  %>  "
+                            class="btn btn-primary">View comments </a>
+                    </div>
+                    <% if( currentUser && (review.reviewer_id === currentUser.id || currentUser.username === 'admin')) {%>
+                    <div class="card-footer bg-white">
+                            <form
+                                action="/restaurants/<%=restaurant.id%>/reviews/<%=review.id%>?_method=DELETE"
+                                method="POST">
+                                <button class="btn btn-danger">Delete</button>
+                            </form>
+                        
+                    </div>
+                    <% } %>
+                    
+                    
+                </div>
+               
+            <% } %>
+        </div>
+    </div>
