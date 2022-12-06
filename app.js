@@ -128,12 +128,13 @@ app.get('/restaurants', (req, res) => {
 })
 
 app.post('/restaurants',(req,res)=>{
-  const query = `insert into restaurant(id,avg_cost,description,name,open_hours,street_no,street_name,district,city,avg_rating,contact_details) values ((SELECT MAX(id)+1 FROM review),${parseInt(""+req.body.avg_cost)},'${req.body.description}','${req.body.name}','${req.body.open_hours}','${req.body.street_no}','${req.body.street_name}','${req.body.district}','${req.body.city}',4.5,'${req.body.contact_details}')`;
+  const query = `insert into restaurant(id,avg_cost,description,name,open_hours,street_no,street_name,district,city,contact_details) values ((SELECT MAX(id)+1 FROM review),${parseInt(""+req.body.avg_cost)},'${req.body.description}','${req.body.name}','${req.body.open_hours}','${req.body.street_no}','${req.body.street_name}','${req.body.district}','${req.body.city}','${req.body.contact_details}')`;
   pool.query(query, (err, results) => {
     if (err) {
       console.log(query);
       throw err;
     }
+    
     req.flash('success', 'Created new restaurant!');
     res.redirect(`/restaurants`);
   })
@@ -198,7 +199,7 @@ app.get('/restaurants/search', (req, res) => {
   let rating = "" + req.query.rating;
   if(rating !== 'Choose Min Rating' ){
     rating = parseFloat(rating);
-    query = query + ` and avg_rating >= ${rating}`;
+    query = query + ` and avg_rating >= ${rating} order by avg_rating`;
   }
   pool.query(query, (err, results) => {
     if (err) {
@@ -238,24 +239,59 @@ app.get('/restaurants/:id',(req,res)=>{
 
 app.post('/restaurants/:id/reviews',(req,res)=>{
   const id = parseInt(req.params.id);
-  pool.query(`INSERT INTO review(id,stars,review_text,upload_date,upvotes,downvotes,reviewer_id,rflag,restaurant_id,iflag,photo) VALUES ((SELECT MAX(id)+1 FROM review),${req.body.stars},'${req.body.review_text}',CURRENT_DATE,0,0,${req.user.id},'true',${id},'false','')`, (err, results) => {
+  pool.query(`select count(reviewer_id) from review where restaurant_id=${id} and reviewer_id = ${req.user.id}`, (err, results) => {
     if (err) {
       throw err;
     }
-    req.flash('success', 'Created new review!');
-    res.redirect(`/restaurants/${id}`);
+    const times = parseInt(results.rows[0].count);
+    if(times>2){
+      req.flash('error', 'Cannot create more review for this restaurant!');
+      return res.redirect(`/restaurants/${id}`);
+    }
+    else{
+      pool.query(`INSERT INTO review(id,stars,review_text,upload_date,upvotes,downvotes,reviewer_id,rflag,restaurant_id,iflag,photo) VALUES ((SELECT MAX(id)+1 FROM review),${req.body.stars},'${req.body.review_text}',CURRENT_DATE,0,0,${req.user.id},'true',${id},'false','')`, (err, results) => {
+        if (err) {
+          throw err;
+        }
+        req.flash('success', 'Created new review!');
+        res.redirect(`/restaurants/${id}`);
+      })
+    }
   })
+
 })
 
 app.post('/restaurants/:id/menu/:item_id/reviews',(req,res)=>{
   const id = parseInt(req.params.id);
-  pool.query(`INSERT INTO review(id,stars,review_text,upload_date,upvotes,downvotes,reviewer_id,rflag,iflag,item_id,photo) VALUES ((SELECT MAX(id)+1 FROM review),${req.body.stars},'${req.body.review_text}',CURRENT_DATE,0,0,${req.user.id},'false','true',${req.params.item_id},'')`, (err, results) => {
+  const itemId = parseInt(req.params.item_id);
+  pool.query(`select count(reviewer_id) from review where item_id=${itemId} and reviewer_id = ${req.user.id}`, (err, results) => {
     if (err) {
       throw err;
     }
-    req.flash('success', 'Created new review!');
-    res.redirect(`/restaurants/${id}/menu/${req.params.item_id}`);
+    const times = parseInt(results.rows[0].count);
+    if(times>2){
+      req.flash('error', 'Cannot create more review for this item!');
+      return res.redirect(`/restaurants/${id}/menu/${req.params.item_id}`);
+    }
+    else{
+      pool.query(`INSERT INTO review(id,stars,review_text,upload_date,upvotes,downvotes,reviewer_id,rflag,iflag,item_id,photo) VALUES ((SELECT MAX(id)+1 FROM review),${req.body.stars},'${req.body.review_text}',CURRENT_DATE,0,0,${req.user.id},'false','true',${req.params.item_id},'')`, (err, results) => {
+        if (err) {
+          throw err;
+        }
+        req.flash('success', 'Created new review!');
+        res.redirect(`/restaurants/${id}/menu/${req.params.item_id}`);
+      })
+    }
   })
+
+
+
+
+
+
+
+
+  
 })
 
 app.delete('/restaurants/:id/reviews/:review_id',(req,res)=>{
@@ -298,7 +334,7 @@ app.get('/restaurants/:id/menu/new',(req,res)=>{
 
 app.post('/restaurants/:id/menu',(req,res)=>{
   const id = parseInt(req.params.id);
-  const query = `insert into item(id,price,category,name,avg_rating,restaurant_id,photo) values((SELECT MAX(id)+1 FROM review),${parseInt(""+req.body.price)},'${""+req.body.category}','${""+req.body.name}',4.5,${parseInt(id)},'')`;
+  const query = `insert into item(id,price,category,name,restaurant_id,photo) values((SELECT MAX(id)+1 FROM review),${parseInt(""+req.body.price)},'${""+req.body.category}','${""+req.body.name}',${parseInt(id)},'')`;
   pool.query(query, (err, results) => {
     if (err) {
       throw err;
