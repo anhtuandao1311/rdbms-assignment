@@ -141,7 +141,7 @@ app.post('/restaurants',(req,res)=>{
 })
 
 app.get('/restaurants/:id/edit',(req,res)=>{
-  pool.query(`SELECT * FROM restaurant where id = ${parseInt(req.params.id)}`, (err, results) => {
+  pool.query(`SELECT * FROM getres(${parseInt(req.params.id)})`, (err, results) => {
     if (err) {
       throw err;
     }
@@ -215,12 +215,12 @@ app.get('/restaurants/new',(req,res)=>{
 })
 
 app.get('/restaurants/:id',(req,res)=>{
-  pool.query(`SELECT * FROM restaurant where id=${parseInt(req.params.id)}`, (err, results) => {
+  pool.query(`SELECT * FROM getres(${parseInt(req.params.id)})`, (err, results) => {
     if (err) {
       throw err;
     }
     const restaurant = results.rows[0];
-    pool.query(`SELECT review.id,stars,review_text,upload_date,upvotes,downvotes,reviewer.username,review.reviewer_id FROM review join reviewer on review.reviewer_id = reviewer.id where restaurant_id=${parseInt(req.params.id)} order by upload_date desc`, (err, results) => {
+    pool.query(`select * from getreview(${parseInt(req.params.id)})`, (err, results) => {
       if (err) {
         throw err;
       }
