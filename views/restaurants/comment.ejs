@@ -11,29 +11,31 @@
                 <p class="starability-result" data-rating="<%=review.stars%>">
                     Rated: <%= review.stars %> stars
                 </p>
-                <p class="card-text"><%= review.review_text %>
+                <p class="card-text">
+                    <%= review.review_text %>
                 </p>
                 <ul class="list-group list-group-flush mb-1">
                     <div class="row">
                         <div class="col-6">
                             <li class="list-group-item text-muted">
-                                <i class='bx bx-like' ></i></i><%= review.upvotes  %> 
+                                <i class='bx bx-like'></i></i>
+                                <%= review.upvotes %>
                             </li>
                         </div>
                         <div class="col-6">
                             <li class="list-group-item text-muted">
-                                <i class='bx bx-dislike' ></i><%= review.downvotes  %> 
+                                <i class='bx bx-dislike'></i>
+                                <%= review.downvotes %>
                             </li>
                         </div>
                     </div>
-                    
+
                 </ul>
-                <p class="card-text"><%= review.upload_date %>
-           
+
             </div>
         </div>
 
-        
+
     </div>
     <% if(currentUser){ %>
         <h2>Leave a Comment</h2>
@@ -41,8 +43,7 @@
             novalidate>
             <div class="mb-3">
                 <label class="form-label" for="body">Comment</label>
-                <textarea class="form-control" name="comment_text" id="body" cols="30" rows="3"
-                    required></textarea>
+                <textarea class="form-control" name="comment_text" id="body" cols="30" rows="3" required></textarea>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
@@ -52,47 +53,43 @@
         <% } %>
 
 
-    <% if(comments.length!==0 && comments) {%> 
-        <div class="row">
-            <% for(let comment of comments){ %>
-            <div class="row align-items-center justify-content-center">
-                <div class="col-1" align="center">
-                    <i class='bx bxs-chevron-right'></i>
-                </div>
-                <div class="col-11">
-                    <div class="card mb-3 ">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <h6 class="card-subtitle mb-2 text-muted">
-                                    <%= comment.username%>
-                                </h6>
-                            </h5>
-                            <p class="card-text"><%= comment.comment_text %>
-                            </p>
-                            <p class="card-text"><%= comment.c_upload_date %>
-                    
+            <% if(comments.length!==0 && comments) {%>
+                <div class="row">
+                    <% for(let comment of comments){ %>
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-1" align="center">
+                                <i class='bx bxs-chevron-right'></i>
+                            </div>
+                            <div class="col-11">
+                                <div class="card mb-3 ">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <h6 class="card-subtitle mb-2 text-muted">
+                                                <%= comment.username%>
+                                            </h6>
+                                        </h5>
+                                        <p class="card-text">
+                                            <%= comment.comment_text %>
+                                        </p>
+
+                                    </div>
+                                    <% if( currentUser &&
+                                        (comment.reviewer_id===currentUser.id||currentUser.username==='admin' )) {%>
+                                        <div class="card-footer bg-white">
+
+                                            <form
+                                                action="/restaurants/<%=id%>/<%= review_id %>/comments/<%= comment.cid %>?_method=DELETE"
+                                                method="POST">
+                                                <button class="btn btn-danger">Delete</button>
+                                            </form>
+
+                                        </div>
+                                        <% } %>
+                                </div>
+                            </div>
+
                         </div>
-                        <% if( currentUser && (comment.reviewer_id === currentUser.id||currentUser.username === 'admin')) {%>
-                        <div class="card-footer bg-white">
-                            
-                                <form
-                                    action="/restaurants/<%=id%>/<%= review_id %>/comments/<%= comment.cid %>?_method=DELETE"
-                                    method="POST">
-                                    <button class="btn btn-danger">Delete</button>
-                                </form>
-                            
-                        </div>
+
                         <% } %>
-                    </div>
                 </div>
-                
-            </div> 
-            
-            <% } %> 
-        </div>
-    <% } %> 
-
-
-
-
-    
+                <% } %>

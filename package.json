@@ -10,7 +10,8 @@
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
-    "pg": "^8.8.0"
+    "pg": "^8.8.0",
+    "sqlite3": "^5.1.6"
   },
   "name": "assignment",
   "version": "1.0.0",
