@@ -1,2 +1,3 @@
 # Restaurant-Review
- a query-focused web created with Express + PostgreSQL
+
+A query-focused web created with Express + SQLite
